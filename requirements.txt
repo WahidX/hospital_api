@@ -1,0 +1,6 @@
+nodemon
+express
+mongoose
+passport
+passport-jwt
+jsonwebtoken
