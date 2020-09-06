@@ -2,12 +2,12 @@ const express = require('express');
 const app = express();
 const port = 8000;
 const db = require('./configs/mongoose');
-const passport = require('passport');
+
 
 
 
 app.use(express.urlencoded());
-
+app.use(express.json());
 
 
 app.use('/', require('./routes'));

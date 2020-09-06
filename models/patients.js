@@ -7,18 +7,18 @@ const patientSchema = new mongoose.Schema({
     },
     phone:{
         type: Number,
-        reqired: true,
-        unique: true
+        reqired: true
     },
     reports:[
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Reports'
+            ref: 'Report'
         }
     ]
 },{
     timestamps: true
 });
 
+patientSchema.index({ name: 1, phone: 1}, { unique: true });
 const Patient = mongoose.model('Patient', patientSchema);
 module.exports = Patient;

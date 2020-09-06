@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 const doctorScheama = new mongoose.Schema({
-    username:{
+    name:{
+        type: String,
+        required: true,
+        maxlength: 100
+    },
+    email:{
         type: String,
         required: true,
         unique: true
@@ -8,6 +13,8 @@ const doctorScheama = new mongoose.Schema({
     password:{
         type: String,
         required: true,
+        minlength: 6,
+        maxlength: 100
     }
 }, {
     timestamps: true
