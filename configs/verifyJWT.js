@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const Doctor = require('../models/doctors');
-const { deleteOne } = require('../models/doctors');
 
 
 module.exports = async function(req, res, next){
