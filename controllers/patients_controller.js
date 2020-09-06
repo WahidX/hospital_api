@@ -56,20 +56,25 @@ module.exports = {
     },
 
     allReports: async function (req, res) {
-        // return res.status(200).send('all report');
+        try{
+            // Checking if patient parameter is correct
+            let patient = await Patient.findById(req.params.id);
+            if(!patient){ return res.status(404).send('Patient not found'); }
 
-        let patient = Patient.findById(req.params.id);
-        if(!patient){ return res.status(400).send('Patient not found'); }
+            // Finding all the reports of that patient( by default it gives oldest to newest )
+            let reports = await Report.find({ 'owner': req.params.id });
 
-        let reports = await Reports.find({})
-            .sort('-createdAt')
-            .populate('reports');
-
-        return res.json(200,{
-            message: "Sign in successful, here's your token",
-            data : {
-                token: jwt.sign(user.toJSON(), 'secret_key', {expiresIn: '10000'})
-            }
-        });
+            // returning the patient's info & reports 
+            return res.status(200).json({
+                message: "Patient already Registered!",
+                data : {
+                    patient: patient,
+                    all_reports: reports
+                }
+            });
+        }
+        catch(err){
+            return res.status(501).send(`Internal Server error ${err}`);
+        }
     }
 };
