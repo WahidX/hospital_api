@@ -1,7 +1,5 @@
 const Patient = require('../models/patients');
 const Report = require('../models/reports');
-const Doctor = require('../models/doctors');
-
 
 module.exports = {
     createUser : async function(req, res) {
