@@ -17,15 +17,17 @@ module.exports = {
                 return res.redirect(`/patients/${ patient._id }/all_reports`);
             }
 
+            // Creating new patient
             let newUser = await Patient.create({
                 name: req.body.name,
                 phone: req.body.phone
             });
 
+            // Returning new user
             return res.status(200).json({
                 message: "Patient registered successfully",
                 data: {
-                    patient_id: newUser._id
+                    patient_id: newUser
                 }
             });
         }
@@ -38,21 +40,28 @@ module.exports = {
     },
 
     createReport: async function (req, res) {
-        let id = req.params.id;
-
+        // Checking if patient parameter is correct
         let patient = await Patient.findById(req.params.id);
-        if(!patient){ return res.status(400).send('Patient not found'); }
+        if(!patient){ return res.status(404).send('Patient not found'); }
 
+        // Creating the report
         let newReport = await Report.create({
-            created_by: req.user,
-            status: req.body.status,
-            owner: patient._id
+            created_by: req.user,       // logged in doctor
+            status: req.body.status,    // status from form data
+            owner: patient._id          // patient gotten from the params
         });
 
+        // Pushing entry in patient's report array
         patient.reports.push(newReport);
         patient.save();
         
-        return res.status(200).send('Report generated');
+        // Returning the generated report
+        return res.status(200).json({
+            message: 'Report generated',
+            data:{
+                newReport: newReport
+            }
+        });
     },
 
     allReports: async function (req, res) {
@@ -61,14 +70,15 @@ module.exports = {
             let patient = await Patient.findById(req.params.id);
             if(!patient){ return res.status(404).send('Patient not found'); }
 
-            // Finding all the reports of that patient( by default it gives oldest to newest )
-            let reports = await Report.find({ 'owner': req.params.id });
+            // Gathering all the reports of that patient( by default it gives oldest to newest )
+            let reports = await Patient.findById(req.params.id).populate({
+                path: 'reports'
+            });
 
             // returning the patient's info & reports 
             return res.status(200).json({
                 message: "Patient already Registered!",
                 data : {
-                    patient: patient,
                     all_reports: reports
                 }
             });
